@@ -6,10 +6,6 @@ const router = express.Router();
 //  is used to name this file for routing...
 // router in router.get refers to the const router above. 
 router.get('/', (req, res) => {
-  // res.send(`
-  //   <h2>Watch out, your going the wrong way!</h>
-  //   <p>Welcome to your worst nightmare!</p>
-  // `);
   Posts.find(req.query)
   .then(posts => {
     res.status(200).json(posts);
