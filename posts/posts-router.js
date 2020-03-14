@@ -60,23 +60,36 @@ router.delete('/:id', (req, res) => {
   });
 });
 
-router.get('/:id/comments', (req, res) => {
-  console.log(req.params.id)
-  Posts.findPostComments(req.params.id)
-  .then(post => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({ message: 'post not found' });
-    }
-  })
-  .catch(error => {
+// router.get('/:id/comments', (req, res) => {
+//   console.log(req.params.id)
+//   Posts.findPostComments(req.params.id)
+//   .then(post => {
+//     if (post) {
+//       res.status(200).json(post);
+//     } else {
+//       res.status(404).json({ message: 'post not found' });
+//     }
+//   })
+//   .catch(error => {
+//     // log error to database
+//     console.log(error);
+//     res.status(500).json({
+//       message: 'Error retrieving the post',
+//     });
+//   });
+// });
+
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const comments = await Posts.findCommentsById(id);
+    res.status(200).json(comments);
+  } catch (error) {
     // log error to database
-    console.log(error);
     res.status(500).json({
-      message: 'Error retrieving the post',
+      message: 'Error finding your comment!',
     });
-  });
+  }
 });
 
 router.post('/', (req, res) => {
