@@ -1,19 +1,18 @@
 const express = require('express');
 
-const hubsRouter = require('./hubs/hubs-router.js');
+const postsRouter = require('./posts/posts-router.js');
 
 const server = express();
 
 server.use(express.json()); // express middleware
-server.use('/api/hubs', hubsRouter);
-server.use('/junk', hubsRouter);
+server.use('/api/posts', postsRouter);
 
 // endpoints
 
 server.get('/', (req, res) => {
   res.send(`
-    <h2>Lambda Hubs API</h>
-    <p>Welcome to the Lambda Hubs API</p>
+    <h2>Lambda Posts API</h>
+    <p>Welcome to the Lambda Posts API</p>
   `);
 });
 
