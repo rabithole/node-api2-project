@@ -56,37 +56,38 @@ router.delete('/:id', (req, res) => {
   });
 });
 
-// router.get('/:id/comments', (req, res) => {
-//   console.log(req.params.id)
-//   Posts.findPostComments(req.params.id)
-//   .then(post => {
-//     if (post) {
-//       res.status(200).json(post);
-//     } else {
-//       res.status(404).json({ message: 'post not found' });
-//     }
-//   })
-//   .catch(error => {
-//     // log error to database
-//     console.log(error);
-//     res.status(500).json({
-//       message: 'Error retrieving the post',
-//     });
-//   });
-// });
-
-router.get('/:id/comments', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const comments = await Posts.findCommentsById(id);
-    res.status(200).json(comments);
-  } catch (error) {
+router.get('/:id/comments', (req, res) => {
+  console.log(req.params.id)
+  Posts.findCommentById(req.params.id)
+  .then(post => {
+    console.log(post)
+    if (post.length > 0) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: 'post not found' });
+    }
+  })
+  .catch(error => {
     // log error to database
+    console.log(error);
     res.status(500).json({
-      message: 'Error finding your comment!',
+      message: 'Error retrieving the post',
     });
-  }
+  });
 });
+
+// router.get('/:id/comments', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const comments = await Posts.findCommentsById(id);
+//     res.status(200).json(comments);
+//   } catch (error) {
+//     // log error to database
+//     res.status(500).json({
+//       message: 'Error finding your comment!',
+//     });
+//   }
+// });
 
 router.post('/', (req, res) => {
   Posts.insert(req.body)
@@ -109,12 +110,14 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const changes = req.body;
+  console.log(req.body, changes.contents)
   Posts.update(req.params.id, changes)
   .then(post => {
+    console.log('post:', post)
     if (post) {
       res.status(200).json(post);
     } else {
-      res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+      res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
     }
   })
   .catch(error => {
