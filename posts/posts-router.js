@@ -80,10 +80,10 @@ router.get('/:id/comments', (req, res) => {
 router.post('/:id/comments', (req, res) => {
   console.log('Post a new comment with this id', req.body)
 
-  Posts.insertComment(req.body.text)
+  Posts.insertComment(req.body)
   .then(post => {
     console.log(post)
-    if (post.length > 0) {
+    if (post) {
       res.status(200).json(post);
     } else {
       res.status(404).json({ message: 'post not found' });
@@ -92,7 +92,7 @@ router.post('/:id/comments', (req, res) => {
   .catch(error => {
     // log error to database
     console.log(error);
-    res.status(510).json({
+    res.status(500).json({
       message: 'Error retrieving the post',
     });
   });
@@ -104,7 +104,7 @@ router.post('/', (req, res) => {
     if(post){
       res.status(201).json(post);  
     } else {
-      res.status(400).json({ errorMessage: "Please provide title and contents for the post."})
+      res.status(404).json({ errorMessage: "Please provide title and contents for the post."})
     }
     
   })
