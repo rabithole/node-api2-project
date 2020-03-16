@@ -20,6 +20,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
+  console.log('Get post by id')
   Posts.findById(req.params.id)
   .then(post => {
     // console.log(post)
@@ -57,10 +58,10 @@ router.delete('/:id', (req, res) => {
 });
 
 router.get('/:id/comments', (req, res) => {
-  console.log(req.params.id)
-  Posts.findCommentById(req.params.id)
+  console.log('Get post comments by id')
+  Posts.findPostComments(req.params.id)
   .then(post => {
-    console.log(post)
+    // console.log('this is post', post)
     if (post.length > 0) {
       res.status(200).json(post);
     } else {
@@ -76,18 +77,26 @@ router.get('/:id/comments', (req, res) => {
   });
 });
 
-// router.get('/:id/comments', async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const comments = await Posts.findCommentsById(id);
-//     res.status(200).json(comments);
-//   } catch (error) {
-//     // log error to database
-//     res.status(500).json({
-//       message: 'Error finding your comment!',
-//     });
-//   }
-// });
+router.post('/:id/comments', (req, res) => {
+  console.log('Post a new comment with this id', req.body)
+
+  Posts.insertComment(req.body.text)
+  .then(post => {
+    console.log(post)
+    if (post.length > 0) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: 'post not found' });
+    }
+  })
+  .catch(error => {
+    // log error to database
+    console.log(error);
+    res.status(510).json({
+      message: 'Error retrieving the post',
+    });
+  });
+});
 
 router.post('/', (req, res) => {
   Posts.insert(req.body)
@@ -110,11 +119,11 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const changes = req.body;
-  console.log(req.body, changes.contents)
+ 
   Posts.update(req.params.id, changes)
   .then(post => {
     console.log('post:', post)
-    if (post) {
+    if (req.body.contents && req.body.title) {
       res.status(200).json(post);
     } else {
       res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
