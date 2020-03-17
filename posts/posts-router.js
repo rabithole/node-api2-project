@@ -35,8 +35,11 @@ router.post('/', (req, res) => {
 
 router.post('/:id/comments', (req, res) => {
   console.log('Post a new comment with this id:', req.body)
+  const { id } = req.params;
+  console.log(id);
 
-  Posts.insertComment(req.body)
+const comment = req.body;
+  Posts.insertComment({ text: req.body.text, post_id: id })
   .then(post => {
     console.log('post:', post)
     if (post) {
