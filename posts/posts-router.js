@@ -52,12 +52,9 @@ router.post('/:id/comments', (req, res) => {
         });
       });  
     }
-}) 
-
-
-
- 
+  }) 
 });
+
 
 router.get('/', (req, res) => {
   Posts.find(req.query)
