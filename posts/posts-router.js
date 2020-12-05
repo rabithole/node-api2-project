@@ -1,6 +1,9 @@
 const express = require('express');
+
+// Static database file. 
 const Posts = require('../data/db.js');
 
+// Creates and express router to end points with specific data. 
 const router = express.Router();
 
 //  is used to name this file for routing...
@@ -57,6 +60,8 @@ router.post('/:id/comments', (req, res) => {
 
 
 router.get('/', (req, res) => {
+  console.log('Req query' ,req.query)
+  // req.query is taken from a query string in the url. Everything after the ? is a query string. req.query is an object with all the query strings from the url. 
   Posts.find(req.query)
   .then(posts => {
     res.status(200).json(posts);
